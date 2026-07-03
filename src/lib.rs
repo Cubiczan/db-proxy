@@ -9,11 +9,11 @@ use axum::{
 };
 use chrono::{DateTime, NaiveDate, NaiveDateTime, NaiveTime, Utc};
 use native_tls::TlsConnector;
-use resilient_call::{crdb_retry, with_timeout, ResilienceError, SqlError};
-use subtle::ConstantTimeEq;
 use postgres_native_tls::MakeTlsConnector;
+use resilient_call::{crdb_retry, with_timeout, ResilienceError, SqlError};
 use serde::Deserialize;
 use serde_json::{json, Map, Value};
+use subtle::ConstantTimeEq;
 use tokio_postgres::{
     config::SslMode,
     types::{Json as PgJson, ToSql, Type},
@@ -62,8 +62,7 @@ impl Config {
                 .and_then(|value| value.parse::<u16>().ok())
                 .unwrap_or(8080),
             api_key: non_empty_env("API_KEY"),
-            cockroach_host: env::var("COCKROACH_HOST")
-                .unwrap_or_else(|_| "localhost".to_string()),
+            cockroach_host: env::var("COCKROACH_HOST").unwrap_or_else(|_| "localhost".to_string()),
             cockroach_port: env::var("COCKROACH_PORT")
                 .ok()
                 .and_then(|value| value.parse::<u16>().ok())
