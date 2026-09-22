@@ -14,6 +14,21 @@
 - `GET /api/finance-cockpit` - finance cockpit aggregate with mock fallback
 - `GET /api/decision-brief/{id}` - decision brief aggregate with mock fallback
 - `GET /api/battery-erp-dashboard` - battery ERP aggregate with mock fallback
+- `GET /api/analytics/procurement-spend` - typed supplier spend rows
+- `GET /api/analytics/margin-bridge` - typed gross-margin bridge rows
+- `GET /api/analytics/working-capital` - typed DSO/DIO/DPO/CCC rows
+- `GET /api/analytics/value-pools` - typed addressable value-pool rows
+
+Analytics routes are governed query contracts, not a SQL passthrough. They run
+fixed queries against the `closed_loop_finance` views `supplier_spend`,
+`margin_bridge`, `working_capital_metrics`, and `value_pools`. Clients may only
+provide the documented filters (`limit`, plus the endpoint's dimension filters);
+table names, columns, expressions, and SQL are never accepted from requests.
+`limit` is clamped to `1..=500`. The expected view columns are the response
+field names, using the canonical definitions in the procurement data spine.
+Procurement spend accepts `supplier_id`; margin bridge accepts `channel`,
+`region`, and `product_id`; working capital accepts `period`; value pools
+accepts `category`.
 
 ## Configuration
 

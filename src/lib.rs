@@ -25,6 +25,8 @@ use tower_http::{
 };
 use uuid::Uuid;
 
+mod analytics;
+
 /// Deadline for establishing a database connection.
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(5);
 /// Deadline for an individual query/write to complete.
@@ -111,6 +113,19 @@ pub fn build_router(config: Arc<Config>) -> Router {
         .route("/api/databases", get(list_databases))
         .route("/api/market-radar", get(get_market_radar))
         .route("/api/finance-cockpit", get(get_finance_cockpit))
+        .route(
+            "/api/analytics/procurement-spend",
+            get(analytics::procurement_spend),
+        )
+        .route(
+            "/api/analytics/margin-bridge",
+            get(analytics::margin_bridge),
+        )
+        .route(
+            "/api/analytics/working-capital",
+            get(analytics::working_capital),
+        )
+        .route("/api/analytics/value-pools", get(analytics::value_pools))
         .route("/api/decision-brief/{decision_id}", get(get_decision_brief))
         .route("/api/battery-erp-dashboard", get(get_battery_erp_dashboard))
         .route("/api/{database}/tables", get(list_tables))
